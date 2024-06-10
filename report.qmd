@@ -1,0 +1,983 @@
+---
+title: "Happiness Index Report Analysis"
+subtitle: "Happiness Index and Population Well-being Alignment Exploration"
+author: 
+  - Nanmanat Disayakamonpan
+  - Leona Hasani
+  - Leona Hoxha 
+date: 2023-12-21
+abstract: "Our report delves into the Happiness Index Data Set, unraveling the multifaceted elements that contribute to elevated happiness scores globally. Motivated by the overarching question of primary happiness influencers, we scrutinize indicators like GDP, social support, freedom, positive affect, and life expectancy. Venturing beyond, we intertwine the Happiness Index with the European Social Survey, unveiling a nuanced yet reliable alignment of cultural, economic, and social features with respondents' happiness levels. This connection, underscored by a low standard deviation, portrays a complex but consistent relationship between official happiness indices and subjective well-being across Europe."
+format: 
+  html:
+    code-fold: true
+    standalone: true
+    embed-resources: true
+    toc: true
+---
+
+# Introduction
+
+<!-- 
+In this section describe: 
+- What is the research question(s) you want to answer and why?
+
+  According to the report of the happiness index, what are the main factors that determine happiness?
+  Given the indicators in the happiness index data set, is it possible to forecast the happiness score?
+  Does the happiness index data set's cultural, economic, and social features align with the direction pattern of the
+  population's happiness in the European Social Survey Data Set?
+  
+  We are conducting this research since there are a lot of individuals who want to live happy lives and with higher
+  quality. We wish to compare the Happiness Index Report's findings with the real viewpoints of those nations in order
+  to determine how similar the report's findings are.
+  
+- With what data you want to answer the question?
+  
+  The data sets that we use in this project are: Happiness Index Data set, European Social Survey from Round
+  10 and 10SC (ESS10 & ESS10SC), and the World Development Indicator.
+
+- Where does the data come from, how was it collected?
+
+  The URLs of the data sets:
+    - Happiness index data set
+    https://worldhappiness.report/ed/2023/#appendices-and-data
+    - ESS data set
+    https://ess.sikt.no/en/data-builder/?tab=round_country&seriesVersion=775&variables=2.0.42_43_67+5.12
+    - WDI data set
+    https://databank.worldbank.org/source/world-development-indicators#
+--> 
+
+In our perspective, the pursuit of a better quality of life encompasses a desire for a stable economy, a supportive society, and personal freedom. With these aspirations in mind, our analysis delves into the Happiness Index Data Set, seeking to uncover the intricate factors that contribute to higher happiness scores in regions and countries worldwide.
+
+Our research is motivated by a fundamental question: **What are the primary factors that influence happiness?** By leveraging the wealth of information in the happiness index data set, we aim to explore and dissect the key elements that play a pivotal role in shaping the overall well-being of individuals and societies.
+
+Moreover, we embark on a journey to determine the predictability of happiness scores. **Can the happiness score be forecasted based on the indicators within the happiness index data set?** This question drives our exploration into the potential predictive power of the data set, offering insights into the dynamics of happiness over time.
+
+Lastly, our investigation extends beyond the data set itself to scrutinize **the alignment of cultural, economic, and social features with the directional patterns of happiness observed in the European Social Survey Data Set.** This comparative analysis seeks to unravel connections and disparities, providing a holistic understanding of how various aspects contribute to the happiness landscape.
+
+# Data 
+
+<!-- Put the dataset you want to use into this repository and import it in a chunk here. Describe the relevant aspects of the data here. Also some basic data preparation can already happen here. -->
+
+In this report, we use three data sets and get the data from the following resources:
+
+1. **happyindex**: The Happiness Index Data Set
+
+The data set **happyindex** is from **https://worldhappiness.report/ed/2023/#appendices-and-data**
+
+* **Variable Description**
+    + ***life_ladder***
+        - Happiness score or subjective well-being (SWB): The survey's measure of SWB is the national average response to the question of life evaluations: *“Please imagine a ladder, with steps numbered from 0 at the bottom to 10 at the top"*. The top of the ladder represents the best possible life for you, and the bottom of the ladder represents the worst possible life for you. "On which step of the ladder would you say you personally feel you stand at this time?"
+    + ***log_GDP***
+        - The statistics of GDP per capita (variable name GDP) in purchasing power parity (PPP) at constant 2017 international dollar prices are from World Development Indicators 
+    + ***soc_support***
+        - Social support is the national average of the binary responses (either 0 or 1) to the question “If you were in trouble, do you have relatives or friends you can count on to help you whenever you need them, or not?”
+    + ***life_exp***
+        - Healthy Life Expectancy (HLE). Healthy life expectancies at birth are based
+on the data extracted from the World Health Organization’s (WHO) Global Health Observatory data repository.
+    + ***freedom***
+        - Freedom to make life choices is the national average of responses to the 
+question “Are you satisfied or dissatisfied with your freedom to choose what you do with your life?”
+    + ***generosity***
+        - Generosity is the response to the question “Have you donated money to a charity in the past month?”. It is a clear marker for a sense of positive community engagement and a central way that humans connect with each other.
+    + ***corruption***
+        - Corruption Perception: The measure is the national average of the survey responses to two questions: “Is corruption widespread throughout the government or not” and “Is corruption widespread within businesses or not?” The overall perception is just the average of the two 0-or-1 responses.
+    + ***pos_affect***
+        - Positive affect is defined as the average of three positive affect measures: laugh, enjoyment and doing interesting things. These measures are the responses to the following three questions, respectively: “Did you smile or laugh a lot yesterday?”, and “Did you experience the following feelings during A LOT OF THE DAY yesterday? How about
+Enjoyment?”, “Did you learn or do something interesting yesterday?”
+    + ***neg_affect***
+        - Negative affect is defined as the average of three negative affect measures. They are worry, sadness and anger, respectively the responses to “Did you experience the following feelings during A LOT OF THE DAY yesterday? How about Worry?”, “Did you experience the following feelings during A LOT OF THE DAY yesterday? How about Sadness?”, and “Did you experience the following feelings during A LOT OF THE DAY yesterday? How about Anger?”
+
+2. **WDI**: World Development Indicator Data Set
+
+The data set **WDI** is from **https://databank.worldbank.org/source/world-development-indicators#**
+
+In this data set, we exclusively utilize the 'region' variable to merge with the 'happyindex' data set.
+
+3. **ess**: European Social Survey Round 10 and 10SC (ESS10 & ESS10SC) Data Set
+
+The data set **ess** is from **https://ess.sikt.no/en/data-builder/?tab=round_country&seriesVersion=775&variables=2.0.42_43_67+5.12**
+
+* **Variable Description**
+    + ***influence_pol***
+        - The variable 'influence_pol' represents the extent to which individuals believe the political system allows them to have influence on politics, with a scale ranging from 1 denoting 'Not at All' to 5 signifying 'a Great Deal'.
+    + ***say_pol***
+        - The variable 'say_pol' represents the extent to which individuals believe the Political system allows people to have a say in what government does, with a scale ranging from 1 denoting 'Not at All' to 5 signifying 'a Great Deal'.
+    + ***satis_demo***
+        - The variable 'satis_demo' represents the extent to which individuals are satisfied with the way democracy works in their country, with a scale ranging from 0 denoting 'Extremely Dissatisfied' to 10 signifying 'Extremely Satisfied'.
+    + ***satis_eco***
+        - The variable 'satis_eco' represents the extent to which individuals are satisfied with the present state of economy in their country, with a scale ranging from 0 denoting 'Extremely Dissatisfied' to 10 signifying 'Extremely Satisfied'.
+    + ***satis_life***
+        - The variable 'satis_life' represents the extent to which individuals are satisfied with life as a whole, with a scale ranging from 0 denoting 'Extremely Dissatisfied' to 10 signifying 'Extremely Satisfied'.
+    + ***donate***
+        - The variable 'donate' measures the extent of people' donations or overall involvement in a political party or pressure organization in the past 12 months, with a scale ranging from 1 denoting 'Yes' to 2 signifying 'No'.
+    + ***safety***
+        - The variable 'safety' represents the extent to how much individuals feel safe of walking alone in local area after dark, with a scale ranging from 1 denoting 'Very Safe' to 4 signifying 'Very Unsafe'.
+    + ***how_happy***
+        - The variable 'how_happy' represents the extent to which individuals are satisfied with life as a whole, with a scale ranging from 0 denoting 'Extremely Unhappy' to 10 signifying 'Extremely Happy'.
+    + ***health***
+        - The variable 'health' represents the subjective general health, with a scale ranging from 1 denoting 'Very Good' to 5 signifying 'Very Bad'.
+    + ***psn_matters***
+        - The variable 'psn_matters' represents to how many people or with whom you can discuss intimate and personal matters, with a scale ranging from 0 denoting 'None' to 6 signifying '10 or more'.
+    + ***soc_meet***
+        - The variable 'soc_meet' represents the extent to how often you socially meet with friends, relatives or colleagues, with a scale ranging from 1 denoting 'Never' to 7 signifying 'Every day'.
+    + ***house_inc***
+        - The variable 'house_inc' represents the extent to how individuals are feeling about household's income nowadays, with a scale ranging from 1 denoting 'Living comfortably on present income' to 4 signifying 'Very difficult on present income'.
+
+We are undertaking this research with the aim of understanding the aspirations of individuals who seek a happier and higher quality of life. Utilizing the happiness index data set, we would like to explore the data sets to unravel answers to the following questions:
+
+**1. What are the primary factors influencing happiness?**
+
+**2. Can the happiness score be forecasted based on the indicators in the happiness index data set?**
+
+**3. Do the cultural, economic, and social features in the happiness index data set align with how happy respondents observed in the European Social Survey Data Set are?**
+
+```{r}
+#| label: data-import
+#| message: false
+#| echo: false
+
+suppressWarnings(
+  {
+#Importing the needed libraries
+library(tidyverse)
+library(purrr)
+library(patchwork)
+library(dplyr)
+library(tidymodels)
+library(ggplot2)
+library(corrplot)
+library(correlation)
+library(modelsummary)
+library(knitr)
+library(kableExtra)
+library(lubridate)
+library(stats)
+library(viridis)
+library(readxl)
+library(tidyr)
+require(maps)
+library(ggmap)
+library(stringr)
+library(rworldmap)
+require(RColorBrewer)
+library(pROC)
+library(rpart.plot)
+library(yardstick)
+  }
+)
+
+#getwd() looking at the working directory
+
+#Reading the CSV and Excel files
+happyindex <- read_excel('C:/Users/Lenovo/Desktop/Data Science Concepts and Tools/project-A-aun-nanmanat_leonahasanii_leonahoxha/data/happyindex.xls')
+WDI <- read.csv('C:/Users/Lenovo/Desktop/Data Science Concepts and Tools/project-A-aun-nanmanat_leonahasanii_leonahoxha/data/WDI.csv')
+ess <- read.csv('C:/Users/Lenovo/Desktop/Data Science Concepts and Tools/project-A-aun-nanmanat_leonahasanii_leonahoxha/data/ESS10_10SC.csv')
+
+#Changing the columns names of the happy index data set
+colnames(happyindex) <- c("country", "year", "life_ladder", "log_GDP", "soc_support", "life_exp", "freedom", "generosity", "corruption", "pos_affect", "neg_affect")
+
+#Changing the columns names of the happy index data set
+colnames(happyindex) <- c("country", "year", "life_ladder", "log_GDP", "soc_support", "life_exp", "freedom",     "generosity", "corruption", "pos_affect", "neg_affect")
+
+#Removing and changing the columns names of the ESS data set
+ess <- ess |>
+  select(-name, -essround, -edition, -proddate, -idno, -dweight, -pspwght, -pweight,-anweight, -prob, - stratum, -psu)
+colnames(ess) <- c("ess_country_code", "ess_influence_pol", "ess_say_pol", "ess_satis_demo", "ess_satis_eco", "ess_satis_life", "ess_donate", "ess_safety", "ess_how_happy", "ess_health", "ess_psn_matters", "ess_soc_meet","ess_house_inc")
+
+#Checking if there are any missing values for each data set
+#summary(happyindex)
+#summary(WDI)
+#summary(ess)
+
+
+#Removing the missing values
+happyindex <- na.omit(happyindex)
+
+#Selecting only the country and region variables from the WDI Data Set
+WDI <- WDI |>
+  select(Country.Name, region)
+
+#Defining the missing values of each variable in the ESS data set
+ess$ess_influence_pol[ess$ess_influence_pol %in% c(7, 8, 9)] <- NA
+ess$ess_say_pol[ess$ess_say_pol %in% c(7, 8, 9)] <- NA
+ess$ess_satis_demo[ess$ess_satis_demo %in% c(77, 88, 99)] <- NA
+ess$ess_satis_eco[ess$ess_satis_eco %in% c(77, 88, 99)] <- NA
+ess$ess_satis_life[ess$ess_satis_life %in% c(77, 88, 99)] <- NA
+ess$ess_donate[ess$ess_donate %in% c(7, 8, 9)] <- NA
+ess$ess_safety[ess$ess_safety %in% c(7, 8, 9)] <- NA
+ess$ess_how_happy[ess$ess_how_happy %in% c(77, 88, 99)] <- NA
+ess$ess_health[ess$ess_health %in% c(7, 8, 9)] <- NA
+ess$ess_psn_matters[ess$ess_psn_matters %in% c(77, 88, 99)] <- NA
+ess$ess_soc_meet[ess$ess_soc_meet %in% c(77, 88, 99)] <- NA
+ess$ess_house_inc[ess$ess_house_inc %in% c(7, 8, 9)] <- NA
+
+#Before removing the NA values the data set of ESS has 59,685 observations
+#Removing the missing values from the ESS data set
+ess <- na.omit(ess)
+
+#After removing the missing values from the data set, the analysis is based on 53,541 observations, providing a comprehensive and refined data set for the analysis
+
+```
+
+# Analysis
+
+## The Map of Happy Index Score among Countries Over Time
+
+The following map will show the evolution of overall Happiness Index scores among countries over time, shedding light on the dynamic trends and patterns contributing to understanding global happiness levels. The darker green color represents the higher happiness score and the lighter one indicates the lower happiness score.
+
+```{r}
+#| label: Map of the happiness score among countries over time
+#| message: false
+#| warning: false
+
+#Creating a new dataframe with the name of each country and their respective average life ladder
+suppressWarnings(
+  {
+average_life_ladder <- happyindex |>
+  group_by(country) |>
+  summarize(avg_life_ladder = mean(life_ladder, na.rm = TRUE))
+
+
+d <- data.frame(
+  country = average_life_ladder$country,
+  value = average_life_ladder$avg_life_ladder
+)
+
+cols <- colorRampPalette(brewer.pal(7, "Greens"))(length(d))
+
+n <- invisible(joinCountryData2Map(d, joinCode = "NAME", nameJoinColumn = "country"))
+
+
+
+  mapCountryData(n, nameColumnToPlot = "value", mapTitle = "World Map for Average Happiness Score", 
+                 colourPalette = cols, oceanCol = "#CCCCCCCC", addLegend = TRUE, 
+                 aspect = 1.1, borderCol = "Black", lwd = 0.1)
+ }
+)
+```
+
+The map clearly illustrates a distinct distribution of happiness scores, with **higher ratings** concentrated in **North America, Central America, South America, Australia, and Europe**. In contrast, **lower scores** are prominently observed in **the continents of Africa and Asia**, highlighting regional disparities in global happiness levels.
+
+## The Averages among Countries Over Time
+
+### Happiness Score
+
+This exploration focuses on unraveling the dynamics of the average life ladder among countries, offering valuable insights into which countries experienced higher happiness scores over time. 
+
+```{r}
+#| label: The graph of the average happiness score among countries over time
+#| warning: false
+
+#Filtering the average life ladder above 7
+avg_lifeladder <- happyindex |>
+  group_by(country) |>
+  summarize(avg_lifeladder = mean(life_ladder, na.rm = TRUE)) |> 
+  filter(avg_lifeladder >= 7)
+
+  ggplot(data = avg_lifeladder, aes(x = avg_lifeladder, y = reorder(country, avg_lifeladder), color = country)) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75), size = 4, shape = 15) +
+  labs(title = "Countries with a higher average than 7 of hapiness score", 
+       x = "Life Ladder", 
+       y = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 0)) +
+  theme(legend.position = "none")
+```
+
+As depicted in the graph, a notable observation emerges—**Europe** dominates ***the top level of happiness scores***, with countries such as **Denmark, Finland, Norway, Switzerland, the Netherlands, Iceland, and Sweden** consistently securing positions among the top 10 nations with the highest well-being.
+
+### GDP per Capita
+
+This exploration focuses on unraveling the dynamics of the average GDP per Capita among countries, offering valuable insights into which countries have higher GDP per Capita over time. 
+
+```{r}
+#| label: The graph of the GDP per capita among countries over time
+#| message: false
+#| warning: false
+
+happyindex$true_GDP <- exp(happyindex$log_GDP)
+
+average_life_ladder2 <- happyindex |>
+  group_by(country) |>
+  summarize(avg_GDP = mean(true_GDP, na.rm = TRUE)) |>
+  filter(avg_GDP > 60000) 
+
+  ggplot(data = average_life_ladder2, aes(x = avg_GDP, y = reorder(country, avg_GDP), color = country)) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75), size = 4, shape = 15) +
+  labs(title = "Countries with a higher average than 60K GDP per Capita", 
+       x = "True GDP", 
+       y = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 0)) +
+  theme(legend.position = "none")
+```
+
+Observing the graph, a striking pattern emerges: ***while certain countries exhibit a consistent increase in GDP per capita over time, it becomes evident that economic prosperity alone does not guarantee a higher happiness score.*** Illustratively, countries such as **Qatar, Singapore, the United Arab Emirates, and Kuwait** boast high GDP per capita, yet they do not secure positions in the top country lists for happiness scores, underscoring the nuanced relationship between economic wealth and overall well-being.
+
+## Top countries who performed better in the Happy Index indicators, in 2020
+
+### Happiness Score
+
+This exploration delves into the distribution of happiness scores in the year 2020, providing insights into the varied levels of well-being experienced across different regions and countries during that specific period.
+
+```{r}
+#| label: The graph of top countries in the happiness score in 2020
+#| message: false
+#| warning: false
+
+happyindex2 <- happyindex |>
+  filter(life_ladder >= 7, year == 2020)
+
+#summary(happyindex)
+
+ggplot(happyindex2, aes(x = life_ladder, y = reorder(country, life_ladder), color = country)) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75), size = 4, shape = 15) +
+  labs(title = "Countries which have a higher happiness score of 7, in 2020", 
+       x = "Life Ladder", 
+       y = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 0)) +
+  theme(legend.position = "none")
+```
+
+An evident trend persists as ***European countries continue to dominate the highest positions in happiness scores in 2020***. Notable nations such as **Finland, Iceland, Denmark, Switzerland, the Netherlands, Sweden, Germany, and Norway** maintain their consistent presence at the forefront of well-being.
+
+### GDP per Capita 
+
+This graph focuses on unraveling the distribution of GDP per capita in the year 2020, shedding light on the economic landscape and variations in prosperity across different regions and countries during that specific period.
+
+```{r}
+#| label: The graph of top countries based on the GDP per Capita in 2020
+#| message: false
+#| warning: false
+
+happyindex4 <- happyindex |>
+  filter(true_GDP >= 50000, year == 2020)
+
+ggplot(happyindex4, aes(x = true_GDP, y = reorder(country, true_GDP), color = country)) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75), size = 4, shape = 15) +
+  labs(title = "Countries which have a higher GDP than 50K, in 2020", 
+       x = "True GDP", 
+       y = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 0)) +
+  theme(legend.position = "none")
+```
+
+The results reveal a distinct trend, indicating that a majority of **European countries**, excluding *the United States*, exhibited **high GDP per capita**, surpassing the $50,000 value.
+
+## The Correlation Matrix of the Happiness Index Data Set
+
+This illustration delves into the correlation matrix of the Happiness Index data set, providing a comprehensive exploration of the interrelationships between various factors contributing to overall well-being, offering valuable insights into the intricate web of variables influencing happiness scores.
+
+```{r}
+#| label: Correlation matrix of the happyindex dataset
+#| message: false
+
+#Creating the correlation matrix only with the numerical variables
+happyindex |> 
+  select(-log_GDP, -year, -country) |> # take out the non-numeric variables
+  cor(use = "pairwise.complete.obs")  |> #it omits any pairs of observations where one or both values are missing 
+  corrplot(method = "color", addCoef.col = "black", tl.col = "black", number.cex = 0.6, tl.cex = 0.6, 
+           col = colorRampPalette(c("turquoise", "white", "coral"))(100))
+```
+The correlation matrix provides insights into the relationships between various factors in the Happiness Index data set. The diagonal elements represent the correlation of each variable with itself, showing perfect positive correlation, as expected. Notably, **life ladder, social support, and life expectancy** exhibit **strong positive correlations with values ranging from 0.72 to 1**, indicating a substantial association. Conversely, **corruption** demonstrates **a negative correlation with most variables**, particularly with true GDP, implying that **higher corruption is associated with lower economic performance.**
+
+The variables related to affect, such as positive affect and negative affect, show moderate correlations with other factors. **Positive affect has a positive correlation with life ladder, social support, life expectancy, and freedom, suggesting that higher positive affect is associated with higher well-being indicators.** On the other hand, **negative affect has a negative correlation with these factors, indicating that higher negative affect is associated with lower well-being.**
+
+**True GDP exhibits a positive correlation with life ladder, social support, and life expectancy**, suggesting that **higher economic performance is associated with higher levels of well-being**. Additionally, freedom and generosity show positive correlations with several well-being indicators.
+
+In summary, the correlation matrix provides a comprehensive overview of the relationships between variables in the Happiness Index data set, offering valuable insights into the complex interplay of factors influencing overall well-being.
+
+## Principal Component Analysis
+
+The next illustration is about the Principal Component Analysis (PCA) on the Happy Index data set, with the first step being the removal of categorical variables (country, year, log_GDP, life_ladder).
+
+It firstly visualizes **the importance of variables in the first four principal components (PC1 to PC4)** through a bar plot, where each bar represents the contribution of a variable to a principal component.
+
+Secondly, the code calculates and plots **the explained variance for the eight principal components**, providing insights into the proportion of overall variance captured by each component.
+
+
+```{r}
+#| label: principal component analysis, variable loading 
+
+#Creating a new dataframe while removing the non-numerical variables and two other variables that are not needed, in order to center and to scale the data
+PCA <- happyindex |>
+  select(-country, -year, -log_GDP) |>
+  prcomp(scale = TRUE, center = TRUE)
+
+#visualizing the variable loading from PC1 to PC4
+PCA$rotation |> as_tibble(rownames = "variable") |>
+  pivot_longer(starts_with("PC"), names_to = "PC", values_to = "value") |>
+  filter(PC %in% c("PC1", "PC2", "PC3", "PC4")) |>
+  ggplot(aes(value, variable)) +
+  geom_col(fill = "palegreen3", color = "black") + 
+  labs(title = "Variable loadings of principal components from 1 to 4") +
+  geom_vline(xintercept = 0) +
+  facet_wrap(~PC, nrow = 1) +
+  theme_minimal() 
+```
+
+From the first visualization, we can see that the first principal component represents the group of countries who have a high GDP, high values of the positive variables such as life_ladder, soc_support, pos_affect, life_exp, generosity, freedom, and low values in the negative variables like neg_affect and corruption. This group could be seen as **the group of countries which are rich and also have a happy population overall.**
+
+The second principal component, represents the group of countries who have a high GDP and life_exp, but also high corruption and not so happy population (not very high life_ladder, low pos_affect, low generosity and low freedom), that's why this group could be called as **the "Grumpy" group of the countries.**
+
+The third principal component, represents the group of countries with the low value of true_GDP, life_ladder, life_exp, and neg_affect. This group has high value of the corruption variable, which explains that this group represents **the countries with overall bad economic situation.**
+
+The forth principal component represents the group of unhappy countries with high value of true_GDP and non distinct opinions about the positive and negative variables. It has low neg_affect and low corruption, but then also low pos_affect, which could mean that **there is a diversity among the happiness score for those countries.**
+
+```{r}
+#| label: principal component analysis, explained variance
+
+standard_deviations <- PCA$sdev
+
+explained_variance <- (standard_deviations^2) / sum(standard_deviations^2)
+
+data <- data.frame(PC = 1:8, Standard_Deviation = standard_deviations[1:8], Explained_Variance = explained_variance[1:8] * 100)
+
+#Visualizing the explained variance of each principal component
+ggplot(data, aes(x = factor(PC), y = Explained_Variance)) +
+  geom_bar(stat = "identity", fill = "palegreen3", color = "black") +
+  geom_text(aes(label = paste(round(Explained_Variance, 2), "%")), vjust = -0.5, size = 4) +
+  labs(title = "Explained Variance for Principal Components 1 to 8",
+       x = "Principal Components",
+       y = "Explained Variance (%)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(hjust = 1))
+```
+
+In the second visualization we can see that **the first principal component represents the 46.88% of the explained variance in the data set**, whereas the other principal components explain less than 20% of the variance in the data set. In order to properly explain the variance in the Happy Index data set, we need to take into consideration the first six principal components, which sum up to 92.68% of the explained variance.
+
+### Visualization of the Principal Components by regions
+
+The next illustration shows the first and second Principal Components from the previous analysis, plotted in a two-dimensional scatter plot. The points in the plot are values of countries in those two PCs, filtered by the year 2020, color-coded by region, providing an overview of the distribution of the countries and the relationships between countries in the PCA space.
+
+```{r}
+#| label: Joining the Happy Index with the WDI Data Set for the region, and then doing the principal component analysis
+#| echo: false
+#| include: false
+
+#Joining the two data sets of the Happy Index and the WDI by country, in order to have the region of each country
+happyindex5 <- happyindex |>
+  left_join(WDI, by = c("country" = "Country.Name")) 
+
+#After observing here we could clearly see that all of the missing values, are countries of the region of the East Asia & Pacific, so we fill these NA values with the corresponding region
+
+happyindex5 <- happyindex5 |>
+  mutate(
+    region = if_else(is.na(region), "East Asia & Pacific", region),
+  ) 
+
+#Then, we also do again the centering and scaling the non-numerical variables and the interested varibles
+PCA2 <- happyindex5 |>
+  select(-country, -year, -log_GDP, -life_ladder, -region) |>
+  prcomp(scale = TRUE, center = TRUE)
+
+
+pca_df3 <- data.frame(
+  PC1 = PCA2$x[, 1],
+  PC2 = PCA2$x[, 2],
+  region = happyindex5$region,
+  country = happyindex5$country
+)
+
+#Creating the PC1 and PC2 space of all the regions over time
+pca_df3 |>
+  ggplot(aes(x = PC1, y = PC2, color = region)) +
+  geom_point(size = 1.2, shape = 15) +
+  labs(title = "PCA Results: PC1 vs PC2",
+       x = "PC1",
+       y = "PC2") +
+  theme_minimal() 
+```
+
+```{r}
+#| label: Regions in the PC1 and PC2 space
+
+#The same idea has been followed here as for the above chunk, but here we are only interested in the year 2020
+happyindex5 <- happyindex |>
+  left_join(WDI, by = c("country" = "Country.Name")) 
+
+
+happyindex5 <- happyindex5 |>
+  mutate(
+    region = if_else(is.na(region), "East Asia & Pacific", region),
+  ) |>
+  filter(year == 2020)
+
+
+PCA2 <- happyindex5 |>
+  select(-country, -year, -log_GDP, -life_ladder, -region) |>
+  prcomp(scale = TRUE, center = TRUE)
+
+
+pca_df3 <- data.frame(
+  PC1 = PCA2$x[, 1],
+  PC2 = PCA2$x[, 2],
+  region = happyindex5$region,
+  country = happyindex5$country
+)
+
+#Visualizing the PC1 vs PC2 Space of all the regions in the year 2020s
+pca_df3 |>
+  ggplot(aes(x = PC1, y = PC2, color = region)) +
+  geom_point(size = 3, shape = 15) +
+  labs(title = "PC1 vs PC2 Space in 2020, colored by region",
+       x = "PC1",
+       y = "PC2", 
+       color = "Region:") +
+  theme_minimal()
+  
+```
+
+From this visualization, we can see that the similarities between regions and their countries based on their distribution.
+
+Firstly, countries in the regions of **South Asia**, **Sub-Sahaharan Africa**, and **East Asia & Pacific** generally have a negative PC1 and PC2 which means that those countries are not very rich, happy and either grumpy.
+
+Secondly, countries in the regions of **Europe & Central Asia** have positive values for the PC1 and PC2 which means that they are happy and rich countries, however, some of these countries are also Grumpy (level of generosity and pos_affect is low).
+
+As for the **North America** countries, which are Canada and USA, they have a high PC1, which means these countries are rich and also happy.
+
+As for the countries of **Middle East & North Africa** region, most of them have a negative PC1 and positive PC2, which means that these countries are not rich and happy and also they are grumpy. A few of these countries, which are probably the countries from the Middle East region, have a positive PC1 and positive PC2, indicating that those countries are rich and Grumpy (similar to a typical Europe & Central Asia country).
+
+**When comparing the World Map of Happy Index Score and this PCA Visualization Map, we can see that there is a connection between these two visualizations**, because *the countries of America, Europe and Australia are colored as happy countries* whereas *the countries of Africa and Asia are not quite happy* according to the World Map, which were the same insights we got from the PCA Visualization of Countries Map.
+
+# Can the happiness score be forecasted based on the indicators in the happiness index data set?
+
+The primary inquiry driving our investigation is simple: **Is it possible to predict the happiness score based on the indicators in the Happiness Index data set?** This inquiry delves into the realm of predictive modeling, where factors such as GDP, social support, and positive affect serve as the fundamental components of our analytical exploration. The predictive models we have developed, including the **Traditional Model, Logarithmic Transformation Model, and Principal Component Analysis Model**, serve as our current tools, each specifically tailored to reveal distinct insights within the vast amount of data. Each of these models employs Linear Regression. However, we then opt to examine the altered data set using logarithmic transformation. Additionally, we attempt to construct another model by centering and scaling the data. Our objective is ***to utilize these models to understand and predict the constantly changing satisfaction levels based on the Happy Index Data Set.***
+
+```{r}
+#| label: Splitting the data 
+#| echo: false
+#| include: false
+
+set.seed(0421)
+
+data_split <- initial_split(happyindex, prop = 0.7) 
+
+
+train_data <- training(data_split)
+test_data <- testing(data_split)
+
+#hist(train_data$soc_support)
+#hist(train_data$life_exp)
+#hist(train_data$freedom)
+#hist(train_data$generosity)
+#hist(train_data$corruption)
+#hist(train_data$pos_affect)
+
+
+algorithm_OLS <- linear_reg() |>
+  set_engine("lm") |>
+  set_mode("regression")
+
+missing_values <- colSums(is.na(train_data))
+
+```
+
+```{r}
+#| label: First model
+#| echo: false
+#| include: false
+TM0 <- fit(algorithm_OLS, life_ladder ~ 1, data = train_data)
+#tidy(TM0)
+#glance(TM0)
+rmse(as.data.frame(cbind(train_data$life_ladder, TM0$fit$fitted.values)),V1,V2)
+```
+
+```{r}
+#| label: Second model
+#| echo: false
+#| include: false
+TM1 <- fit(algorithm_OLS, life_ladder ~ life_exp, data = train_data)
+tidy(TM1)
+glance(TM1)
+```
+
+```{r}
+#| label: Third model
+#| echo: false
+#| include: false
+TM2 <- fit(algorithm_OLS, life_ladder ~ soc_support, data = train_data)
+tidy(TM2)
+glance(TM2)
+```
+
+```{r}
+#| label: Fourth model
+#| echo: false
+#| include: false
+TM3 <- fit(algorithm_OLS, life_ladder ~ true_GDP, data = train_data)
+tidy(TM3)
+glance(TM3)
+
+```
+
+```{r}
+#| label: Fifth model
+#| echo: false
+#| include: false
+TM4 <- fit(algorithm_OLS, life_ladder ~ log_GDP+freedom+soc_support+pos_affect+life_exp, data = train_data)
+tidy(TM4)
+glance(TM4)
+```
+
+```{r}
+#| label: Models, recipes, workflows, fitting , prediction and the train and test errors
+#| echo: false
+#| include: false
+
+# Configuring the linear regression model using OLS (Ordinary Least Squares)
+Regression_OLS <- linear_reg() |>
+  set_mode("regression") |>
+  set_engine("lm")
+
+#Creating the recipe for the traditional model
+TM_Model <- recipe(
+  life_ladder ~ log_GDP+freedom+soc_support+pos_affect+life_exp, 
+  data = train_data           
+)
+
+#summary(TM_Model)
+
+# Creating log-transformed variables for TMln Model
+train_data$log_life_ladder <- log(train_data$life_ladder)
+test_data$log_life_ladder <- log(test_data$life_ladder)
+
+#Creating the recipe for the log-transformed model
+TMln_Model <- recipe(log_life_ladder ~ ., data = train_data) |> 
+              step_log(true_GDP, offset =  1, base = 10) |> # log-transform predictor 
+              step_log(soc_support, offset =  1, base = 10) |> 
+              step_log(freedom, offset =  1, base = 10) |>
+              step_log(pos_affect, offset =  1, base = 10) |>
+              step_log(life_exp, offset =  1, base = 10) |>
+              step_rm("country", "year", "generosity", "corruption", "life_ladder", "neg_affect", "log_GDP")
+
+TMln_Model_prep <- prep(TMln_Model, training = train_data)
+
+#Creating the recipe for the PCA transformed model
+PCA_Model <- recipe(life_ladder ~ ., data = train_data) |>  # Full Model
+  step_rm("country", "year", "log_life_ladder", "true_GDP") |>  
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |>
+  step_pca(c("log_GDP", "freedom", "soc_support","pos_affect", "life_exp"), num_comp = 1, prefix = "Mainvariables") |>
+  step_pca(c("neg_affect", "generosity"), num_comp = 1, prefix = "ControlVariables")
+
+
+PCA_Model_prep <- prep(PCA_Model, training = train_data)
+
+#Adding the model to each of the workflows
+TM_ols_wf <- workflow() |>
+  add_recipe(TM_Model) |>
+  add_model(Regression_OLS)
+
+TMln_ols_wf <- workflow() |>
+                add_recipe(TMln_Model) |>
+                add_model(Regression_OLS)
+
+PCA_ols_wf <- workflow() |>
+  add_recipe(PCA_Model) %>% 
+  add_model(Regression_OLS)
+
+#Fitting the models in the training data
+TM_ols_fit <- fit(TM_ols_wf, data = train_data)
+
+TMln_ols_fit <- fit(TMln_ols_wf, data = train_data)
+
+PCA_ols_fit <- fit(PCA_ols_wf, data = train_data)
+
+#Getting the train error
+rmse(as.data.frame(cbind(train_data$life_ladder, TM_ols_fit$fit$fit$fit$fitted.values)),V1, V2)
+
+rmse(as.data.frame(cbind(train_data$log_life_ladder, TMln_ols_fit$fit$fit$fit$fitted.values)), V1, V2)
+
+rmse(as.data.frame(cbind(train_data$life_ladder,exp(TMln_ols_fit$fit$fit$fit$fitted.values))), V1, V2)
+
+rmse(as.data.frame(cbind(train_data$life_ladder,PCA_ols_fit$fit$fit$fit$fitted.values)),V1, V2)
+
+#Creating a table which shows the intercept and the other coefficients of each model
+modelsummary(
+  models = list(TM_ols_fit, TMln_ols_fit, PCA_ols_fit),
+  estimate = "{estimate}{stars}",
+  stars = FALSE,
+  gof_omit = "rmse", 
+  output = "default"
+)
+
+#Predicting on the unseen data
+predict(TM_ols_fit, new_data = test_data)
+predict(TMln_ols_fit, new_data = test_data)
+predict(PCA_ols_fit, new_data = test_data)
+
+# Getting  the test error
+rmse(as.data.frame(cbind(test_data$life_ladder, unlist(predict(TM_ols_fit, new_data = test_data)) )), V1, V2)
+rmse(as.data.frame(cbind(test_data$life_ladder, exp(unlist(predict(TMln_ols_fit, test_data))))), V1, V2)
+rmse(as.data.frame(cbind(test_data$life_ladder, unlist(predict(PCA_ols_fit, test_data)))), V1, V2)
+```
+
+
+```{r}
+#| label: Table showing R-Squared and the RMSEs
+
+# Calculate R-squared for each model on the training data
+rsq_TM <- rsq(as.data.frame(cbind(train_data$life_ladder, TM_ols_fit$fit$fit$fit$fitted.values)), V1, V2)
+rsq_TMln <- rsq(as.data.frame(cbind(train_data$log_life_ladder, TMln_ols_fit$fit$fit$fit$fitted.values)), V1, V2)
+rsq_PCA <- rsq(as.data.frame(cbind(train_data$life_ladder, PCA_ols_fit$fit$fit$fit$fitted.values)), V1, V2)
+
+# Add R-squared and the train and the test RMSEs values to the Results table
+Results <- tibble(Models = c("TM", "TMln", "PCA"),
+                  R_squared = c(rsq_TM$.estimate, rsq_TMln$.estimate, rsq_PCA$.estimate),
+                  RMSEtrain = c(sqrt(mean((TM_ols_fit$fit$fit$fit$fitted.values - train_data$life_ladder)^2)),
+                                sqrt(mean((exp(TMln_ols_fit$fit$fit$fit$fitted.values) - train_data$life_ladder)^2)),
+                                sqrt(mean((PCA_ols_fit$fit$fit$fit$fitted.values - train_data$life_ladder)^2))),
+                  RMSEtest = c(sqrt(mean((unlist(predict(TM_ols_fit, test_data)) - test_data$life_ladder)^2)),
+                               sqrt(mean((exp(unlist(predict(TMln_ols_fit, test_data))) - test_data$life_ladder)^2)),
+                               sqrt(mean((unlist(predict(PCA_ols_fit, test_data)) - test_data$life_ladder)^2)))
+                  )
+
+
+Results_table <- kable(Results, "html") |>
+  kable_styling()
+
+#Show the table in the html report
+Results_table
+
+```
+
+Now, let us evaluate the performance of these models and determine which one is more effective in predicting the happy index score using the other indicators available in the dataset.
+
+***Traditional Model (TM):***
+
+The Traditional Model, considering variables like GDP, freedom, social support, positive affect, and life expectancy, unfolds a tale of happiness. It narrates that around 77% of the variation in life ladder scores can be clarified by these factors. When it takes on the role of predictor, it's pretty close, with an average error of about 0.55 units, providing a solid grasp of the overall happiness landscape.
+
+***Transformed Model with Logarithmic Transformation (TMln):***
+
+The TMln Model takes a creative twist by transforming the data using logarithms, including the same variables as used in the traditional model, like GDP, freedom, social support, positive affect, and life expectancy. This adjustment still paints a vivid picture, explaining about 74.8% of the nuanced happiness story. In terms of prediction, it has a lower error on both the training and test sets, hinting that this transformation brings us a step closer to a clearer understanding.
+
+***Transformed Model with Principal Component Analysis (PCA):***
+
+The PCA Model employs a sophisticated approach, distilling complex relationships into key components, considering variables like GDP, freedom, social support, positive affect, life expectancy, generosity, and corruption. It captures about 76.9% of the intricate dance of variables affecting happiness. When it ventures into predictions, it's not far off, maintaining an average error of approximately 0.55 units on the training set and 0.57 units on the test set.
+
+To summarize our predictive journey, the Traditional Model (with an impressive R-squared of 77%) effectively reveals the complex relationship between happiness scores and important variables such as GDP, freedom, social support, positive affect, and life expectancy. This model provides valuable insights, attributing 77% of the variance in life ladder scores to these pivotal factors.
+
+The Logarithmic Transformation Model, however, adds complexity to the story. This model shows better RMSE on the test and training data, even if its R-squared is slightly lower than the classic equivalent. Despite having a lower R-squared, this contradiction demonstrates that the Logarithmic Transformation Model is strong in capturing the essence of happiness. This model shows that there is a complex interaction of elements that affect happiness scores, and it is the most accurate forecasting model currently available.
+
+# Do the cultural, economic, and social features in the happiness index data set align with how happy respondents observed in the European Social Survey Data Set are?
+
+In this segment of our analysis, we embark on an exploration of the connection between Happiness Index scores and the subjective well-being of European citizens, as indicated by the European Social Survey. Our aim is to recognize the disparities between life ladder scores in the Happiness Index and the "how happy" variable in the ESS.
+
+As a first step in our analysis, we look at how happiness levels are spread out across Europe. Using the Probability Mass Function (PMF) and Cumulative Distribution Function (CDF), we show which happiness scores are most common and how people's happiness is spread out in Europe as a whole.
+
+This basic step is very important for understanding how these data sets are similar. It serves as an exploration of the intricate interplay between official happiness indices and the authentic sentiments of individuals throughout Europe.
+
+```{r}
+#| label: Probability Mass Function and the Cumulative Distribution of the ess happiness variable
+
+# Creating Probability Mass Function (PMF) for ESS happiness scores
+eu <- ess |>
+  select(ess_how_happy) |> 
+  count(ess_how_happy) |> 
+  mutate(prob = n/sum(n))
+
+# Creating Probability Mass Function (PMF) Plot
+eu_mass <- eu |> 
+  ggplot(aes(ess_how_happy, prob)) +
+  geom_col(fill = "palegreen3", color = "black") +
+  theme_minimal(base_size = 15) + 
+  labs(y = "Probability",
+       x = "ESS Happiness Score") +
+  scale_x_continuous(breaks = seq(0, 10, 2))
+
+# Creating Cumulative Distribution Function (CDF) for ESS happiness scores
+eu_distr <- eu |> 
+  mutate(cumprob = cumsum(prob)) |> 
+  ggplot(aes(ess_how_happy, cumprob)) +
+  geom_col(fill = "palegreen3", color = "black") +
+  labs(y = "Cumulative Probability",
+       x = "ESS Happiness Score") +
+  theme_minimal(base_size = 15) + 
+  scale_x_continuous(breaks = seq(0, 10, 2))
+
+# Displaying PMF and CDF side by side
+eu_mass + eu_distr
+
+```
+
+The Probability Mass Function demonstrates that a sizable proportion of respondents to the European Social Survey (ESS) report a high level of happiness, with an average score of 8. The highest bar, which has a score of 8, implies a dominating probability that is greater than 0.25, which seems to indicate that respondents have a widespread sense of high levels of happiness.
+
+According to the Happiness Index data published for the year 2020, the majority of European countries have a life ladder score that is greater than seven. This is consistent with the observation being made. The concentration of high happiness scores in the ESS corresponds with the generally elevated life ladder scores reported in the Happiness Index data set for the same period.
+
+```{r}
+#| label: Taking the average of the ESS and then joining by country with the Happy Index, 2020
+#| echo: false
+#| include: false 
+
+#unique(ess$country_code) checking for the unique values in the country_code variable in the ESS data set
+
+# Recoding country codes to country names
+ess <- ess |>
+  mutate(country = recode(ess_country_code,
+                          "AL" = "Albania",
+                          "AT" = "Austria",
+                          "BE" = "Belgium",
+                          "BG" = "Bulgaria",
+                          "CH" = "Switzerland",
+                          "CY" = "Cyprus",
+                          "CZ" = "Czechia",
+                          "DE" = "Germany",
+                          "DK" = "Denmark",
+                          "EE" = "Estonia",
+                          "ES" = "Spain",
+                          "FI" = "Finland",
+                          "FR" = "France",
+                          "GB" = "United Kingdom",
+                          "GE" = "Georgia",
+                          "GR" = "Greece",
+                          "HR" = "Croatia",
+                          "HU" = "Hungary",
+                          "IE" = "Ireland",
+                          "IS" = "Iceland",
+                          "IL" = "Israel",
+                          "IT" = "Italy",
+                          "LT" = "Lithuania",
+                          "LU" = "Luxembourg",
+                          "LV" = "Latvia",
+                          "ME" = "Montenegro",
+                          "MK" = "North Macedonia",
+                          "NL" = "Netherlands",
+                          "NO" = "Norway",
+                          "PL" = "Poland",
+                          "PT" = "Portugal",
+                          "RO" = "Romania",
+                          "RS" = "Serbia",
+                          "RU" = "Russian Federation",
+                          "SE" = "Sweden",
+                          "SI" = "Slovenia",
+                          "SK" = "Slovakia",
+                          "TR" = "Turkey",
+                          "UA" = "Ukraine",
+                          "XK" = "Kosovo"
+                          ))
+
+# Filtering the Happy Index data for the year 2020
+happyindex2020 <- happyindex |>
+  filter(year == 2020)
+
+# Calculating average values for each variable in ESS dataset by country
+ess_average <- ess |>
+  select(-ess_country_code) |>
+  group_by(country) |>
+  summarise_all(mean, na.rm = TRUE)
+
+# Joining the average ESS data with the Happy Index data for the year 2020
+ess_average_joined <- ess_average |>
+  left_join(happyindex2020, by = "country") |>
+  select(-year)
+
+
+```
+
+```{r}
+#| label: comparison of the happiness score between the two datasets
+#| echo: false
+#| include: false
+
+# Reshaping the data for plotting
+ess_average_joined |>
+  pivot_longer(cols = c("ess_how_happy", "life_ladder"),
+               names_to = "Type",
+               values_to = "Value") |>
+  # Plotting the comparison of happiness scores
+  ggplot(aes(x = country, y = Value, fill = Type)) +
+  geom_col(position = "dodge") +
+  labs(title = "Comparison of happiness scores between the two data sets, Across Countries",
+       x = "Country",
+       y = "Value",
+       fill = "Variable Type") +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Comparison of the happiness score between the ESS and the Happy Index Data Sets
+
+Now, from the earlier on we know that the European countries in the year of 2020 were performing better at the life ladder of the Happy Index Data Set, where such countries were: Finland, Iceland, Denmark, Switzerland, Netherlands, Sweden, Norway, Austria, and Ireland. Also, here we want to see the comparison between the variable of "how happy are you" in the European Social Survey and the "life ladder" from the Happy Index Data Set. 
+
+```{r}
+#| label: Comparison of the happiness score between the two datasets 1
+
+# Creating a filtered and reshaped data frame for specific countries
+ess_average_joined_1 <- ess_average_joined |>
+  filter(country %in% c("Finland", "Iceland", "Denmark", "Switzerland", "Netherlands", "Sweden", "Germany", "Norway", "Austria", "Ireland")) |>
+  pivot_longer(cols = c("ess_how_happy", "life_ladder"),
+               names_to = "Type",
+               values_to = "Value")
+
+# Plotting the comparison of high happiness scores across countries
+ggplot(ess_average_joined_1, aes(x = country, y = Value, fill = Type)) +
+  geom_col(position = "dodge", alpha = 0.8) +  
+  scale_fill_manual(values = c("#377eb8", "#e41a1c"), name = "Variable Name") +  
+  labs(title = "Comparison of High Happy Scores Across Countries",
+       x = "Country",
+       y = "Value",
+       fill = "") +  # Remove legend title
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5)) 
+
+# Calculating the standard deviation of the difference variable
+standard_deviation <- sd(ess_average_joined$difference)
+
+```
+
+As we set out on this analysis, it is important to note that Denmark is absent from the graph. This is due to the fact that Denmark did not take part in the 10th and 10SC rounds of the ESS in the year 2020. In both data sets, our investigation finds a narrative that is constant throughout the majority of European countries, which suggests that there is a nuanced connection between the Happy Index and the ESS metrics.
+
+Despite the fact that we are focusing on nine nations that have performed very well according to the Happy Index Data Set, our interest extends to the European landscape as a whole. In addition to this, we investigate the differences that exist between all of the nations in Europe by analyzing the standard deviation that exists between the two variables, which is a relatively low ***0.49***. These variables are the life ladder scores on the Happiness Index and the "how happy" values taken from the ESS.
+
+When interpreted on a scale from 0 to 10, the low standard deviation indicates that the discrepancies between the "life_ladder" values in both data sets are generally minimal and consistent. This finding, which is located within a small range surrounding the mean difference, indicates that the well-being of citizens is being portrayed in a more consistent manner. 
+
+Therefore, the low standard deviation (0.49) between Happiness Index and European Social Survey data confirms the alignment of cultural, economic, and social features in the Happiness Index data set with respondents' happiness levels. This implies a complex but continuous relationship between official happiness indices and subjective well-being across Europe.
+
+```{r}
+#| label: Comparison of the happiness score between the two datasets 2
+#| echo: false
+#| include: false
+
+# Creating a filtered and reshaped data frame for specific countries where the difference between the two variables is slightly bigger
+ess_average_joined_2 <- ess_average_joined |>
+  filter(country %in% c("Belgium", "Croatia", "Hungary", "Lithuania", "Montenegro", "North Macedonia", "Poland", "Slovenia")) |>
+  pivot_longer(cols = c("ess_how_happy", "life_ladder"),
+               names_to = "Type",
+               values_to = "Value")
+
+
+ggplot(ess_average_joined_2, aes(x = country, y = Value, fill = Type)) +
+  geom_col(position = "dodge", alpha = 0.8) +  
+  scale_fill_manual(values = c("#377eb8", "#e41a1c"), name = "Variable name:") +  
+  labs(title = "Comparison of High Happy Scores Across Countries",
+       x = "",
+       y = "") +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+```
+
+
+# Conclusion
+
+Our investigation into happiness dynamics reveals crucial factors shaping well-being. The Traditional Model effectively explains 77% of happiness variance, underscoring the significance of GDP, social support, positive affect, freedom, and life expectancy.
+
+Predictive modeling introduces nuances, with the Logarithmic Transformation Model outperforming in accuracy, despite a slightly lower R-squared. This model's adeptness at capturing complex interactions suggests superior forecasting capabilities.
+
+Exploring European Social Survey data indicates alignment with Happy Index Data Set. Despite variations, a low standard deviation implies a nuanced but reliable relationship between official happiness indices and subjective well-being across Europe.
+
+***Limitations and Reliability***
+
+What could be labelled as a limitation in this report is that external factors impacting happiness may not be entirely captured, meaning that other external factors are not present in the data sets and which could have implied the overall happy index score. Moreover another limitation that could be addressed in the European Social Survey is the cultural nuances and survey biases could influence results or the way that respondents have answered.
+
+On the other hand, our findings are reliable within the boundaries of the data and models utilized. The robustness of our analysis relies on the quality and accuracy of the data sets employed, including the Happiness Index Data Set, World Development Indicator Data Set, and European Social Survey Data Set.
+
+In conclusion, our analysis yields valuable insights into global happiness dynamics. While acknowledging limitations, the reliability of our findings within the available data underscores the potential for further exploration and refinement.
+
+
