@@ -1,4 +1,4 @@
-# Data Science Tools Project: Happiness Index Report Analysis - Happiness Index and Population Well-being Alignment Exploration Across Europe
+# Data Science Tools Project: Happiness Index Report Analysis - Happiness Index and Population Well-being Alignment Exploration
 ## Project Overview: 
 Led a comprehensive analysis of global and European happiness dynamics using the Happiness Index Data Set and European Social Survey Data Set. Explored factors influencing happiness and developed predictive models to forecast happiness scores. Conducted a comparative analysis to evaluate the alignment between happiness indices and subjective well-being across Europe.
 
